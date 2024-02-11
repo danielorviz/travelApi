@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.uniovi.miw.travelapi.service.amadeus.AmadeusAuthenticationService;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,8 +23,15 @@ public class AmadeusAuthenticationServiceImpl implements AmadeusAuthenticationSe
     @Value("${amadeus.api.url.authentication}")
     private String authenticationUrl;
 
+    private String authToken;
+
+    private long expirationTimeMillis;
+
     @Override
     public String refreshAccessToken(){
+        if(this.expirationTimeMillis > 0 && this.authToken!= null && System.currentTimeMillis()>= this.expirationTimeMillis){
+            return this.authToken;
+        }
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = new FormBody.Builder()
                 .add("grant_type", "client_credentials")
@@ -42,6 +51,10 @@ public class AmadeusAuthenticationServiceImpl implements AmadeusAuthenticationSe
             JsonNode jsonNode = mapper.readTree(responseBody);
 
             String token = jsonNode.get("access_token").asText();
+            long expires_in = jsonNode.get("expires_in").asLong();
+            this.authToken = token;
+
+            this.expirationTimeMillis = System.currentTimeMillis()+(expires_in - 10);
 
             return token;
         }catch(IOException e ){

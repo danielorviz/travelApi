@@ -1,4 +1,4 @@
-package es.uniovi.miw.travelapi.service.amadeus.dto;
+package es.uniovi.miw.travelapi.service.amadeus.dto.airport;
 
 import lombok.Getter;
 import lombok.Setter;

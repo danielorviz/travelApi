@@ -1,9 +1,6 @@
 package es.uniovi.miw.travelapi.service.amadeus.dto.airport;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import es.uniovi.miw.travelapi.service.amadeus.dto.AddressDto;
-import es.uniovi.miw.travelapi.service.amadeus.dto.AnalyticsDto;
-import es.uniovi.miw.travelapi.service.amadeus.dto.GeoCodeDto;
 import lombok.Getter;
 import lombok.Setter;
 
