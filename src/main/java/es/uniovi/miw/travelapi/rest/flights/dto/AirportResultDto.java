@@ -1,4 +1,4 @@
-package es.uniovi.miw.travelapi.rest.flights;
+package es.uniovi.miw.travelapi.rest.flights.dto;
 
 import es.uniovi.miw.travelapi.service.flight.dto.AirportDto;
 import lombok.AllArgsConstructor;

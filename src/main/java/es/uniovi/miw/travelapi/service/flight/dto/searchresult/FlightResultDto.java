@@ -16,4 +16,6 @@ public class FlightResultDto implements Serializable {
 
     private double price;
     private String currency;
+
+    private double priceWithFare;
 }

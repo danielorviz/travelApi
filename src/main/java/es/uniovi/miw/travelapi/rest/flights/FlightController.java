@@ -1,10 +1,14 @@
 package es.uniovi.miw.travelapi.rest.flights;
 
+import es.uniovi.miw.travelapi.model.FareType;
+import es.uniovi.miw.travelapi.model.IFareType;
 import es.uniovi.miw.travelapi.rest.AbstractController;
+import es.uniovi.miw.travelapi.rest.flights.dto.AirportResultDto;
+import es.uniovi.miw.travelapi.rest.flights.dto.FareResultDto;
 import es.uniovi.miw.travelapi.service.flight.FlightService;
 import es.uniovi.miw.travelapi.service.flight.dto.AirportDto;
 import es.uniovi.miw.travelapi.service.flight.dto.SearchFlightDto;
-import es.uniovi.miw.travelapi.service.flight.dto.searchresult.FlightSearchResultDto;
+import es.uniovi.miw.travelapi.rest.flights.dto.FlightSearchResultDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequestMapping("flight/v1/")
@@ -23,6 +26,10 @@ public class FlightController extends AbstractController {
     @Autowired
     private FlightService flightService;
 
+    @GetMapping("fares")
+    public ResponseEntity<FareResultDto> getFares(){
+        return new ResponseEntity<>(new FareResultDto(), HttpStatus.OK);
+    }
     @GetMapping("airport/search")
     public ResponseEntity<AirportResultDto> searchAirports(@RequestParam("country") String country, @RequestParam("city") String city){
 
@@ -37,14 +44,10 @@ public class FlightController extends AbstractController {
                                                                      @RequestParam("departureDate") String departureDate,
                                                                      @RequestParam("returnDate") String returnDate,
                                                                      @RequestParam("adults") int adults,
-                                                                     @RequestParam("max") int max){
-
-        return new ResponseEntity<>( this.flightService.searchFlights(this.buildSearchFlightDto(originLocationCode,destinationLocationCode,
-                departureDate,returnDate,adults,max)), HttpStatus.OK);
+                                                                     @RequestParam("max") int max,
+                                                                     @RequestParam("fareType") FareType fareType){
+        return new ResponseEntity<>( this.flightService.searchFlights( new SearchFlightDto(originLocationCode,destinationLocationCode,
+                departureDate,returnDate,adults,max,fareType)), HttpStatus.OK);
     }
 
-    private SearchFlightDto buildSearchFlightDto(String originLocationCode, String destinationLocationCode, String departureDate,
-                                                 String returnDate, int adults, int max) {
-        return new SearchFlightDto(originLocationCode.toUpperCase(),destinationLocationCode.toUpperCase(),departureDate,returnDate,adults,max);
-    }
 }

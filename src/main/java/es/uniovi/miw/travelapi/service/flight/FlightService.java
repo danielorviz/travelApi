@@ -1,9 +1,8 @@
 package es.uniovi.miw.travelapi.service.flight;
 
-import es.uniovi.miw.travelapi.service.amadeus.dto.airport.AFlightAirportDto;
 import es.uniovi.miw.travelapi.service.flight.dto.AirportDto;
 import es.uniovi.miw.travelapi.service.flight.dto.SearchFlightDto;
-import es.uniovi.miw.travelapi.service.flight.dto.searchresult.FlightSearchResultDto;
+import es.uniovi.miw.travelapi.rest.flights.dto.FlightSearchResultDto;
 
 import java.util.List;
 

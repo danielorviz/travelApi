@@ -1,5 +1,7 @@
 package es.uniovi.miw.travelapi.service.flight.impl;
 
+import es.uniovi.miw.travelapi.model.FareType;
+import es.uniovi.miw.travelapi.model.IFareType;
 import es.uniovi.miw.travelapi.service.amadeus.AmadeusFlightsService;
 import es.uniovi.miw.travelapi.service.amadeus.dto.airport.AnalyticsDto;
 import es.uniovi.miw.travelapi.service.amadeus.dto.airport.AFlightAirportDto;
@@ -12,7 +14,7 @@ import es.uniovi.miw.travelapi.service.flight.dto.AirportDto;
 import es.uniovi.miw.travelapi.service.flight.dto.SearchFlightDto;
 import es.uniovi.miw.travelapi.service.flight.dto.searchresult.FlightItineraryDto;
 import es.uniovi.miw.travelapi.service.flight.dto.searchresult.FlightResultDto;
-import es.uniovi.miw.travelapi.service.flight.dto.searchresult.FlightSearchResultDto;
+import es.uniovi.miw.travelapi.rest.flights.dto.FlightSearchResultDto;
 import es.uniovi.miw.travelapi.util.CountryCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -59,6 +61,7 @@ public class FlightServiceImpl implements FlightService {
             FlightResultDto dto = new FlightResultDto();
             dto.setId(af.getId());
             dto.setPrice(getPrice(af.getPrice()));
+            dto.setPriceWithFare(getPriceWhitFare(dto.getPrice(), searchFlightDto.getFareType()));
             dto.setCurrency(getCurrency(af.getPrice()));
             dto.setDepartureDayItineraries(this.getItineraries(af.getItineraries(),searchFlightDto.getIataCodeOrigin()));
             dto.setReturnDayItineraries(this.getItineraries(af.getItineraries(),searchFlightDto.getIataCodeDestination()));
@@ -96,5 +99,11 @@ public class FlightServiceImpl implements FlightService {
             return priceDto.getGrandTotal();
         }
         return 0;
+    }
+    private double getPriceWhitFare(double price,IFareType fareType) {
+        if(fareType == null){
+            fareType = FareType.ECONOMY;
+        }
+        return fareType.priceWithFare(price);
     }
 }
